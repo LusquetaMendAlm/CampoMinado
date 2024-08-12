@@ -67,6 +67,7 @@ static void MX_SPI1_Init(void);
 
 void Menu(void);
 void Controls(void);
+void Jogo(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -251,7 +252,11 @@ void Menu(void)
 
     while(1)
     {
-    	if (BOTAO11 == 0) {
+    	if (BOTAO9 == 0 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 1) {
+    	    Jogo();
+    	    break;
+    	}
+    	else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 0 && BOTAO12 == 1) {
     		Controls();
     		break;
     	}
@@ -270,11 +275,42 @@ void Controls(void) {
 
 		while(1){
 
-		if (BOTAO12 == 0) {
-			break;
-		}
+		   if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 0) {
+			  break;
+		   }
 		}
 }
+void Jogo(void)
+{
+	ST7735_FillScreen(RED);
+	ST7735_FillRectangle(40, 10, 110, 60, BLACK);
+	for (int y = 13; y < 65; y += 9)
+	{
+		for (int x = 45; x < 150; x += 15)
+		{
+			ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, BLACK);
+		}
+	}
+
+			if (BOTAO9 == 0){
+	for (int y = 13; y < 65; y += 0)
+			{
+			for (int x = 45; x < 150; x -= 15){
+				ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, RED);
+			}
+				}
+			if(BOTAO10 == 0){
+				for (int y = 13; y < 65; y += 0)
+					{
+			for (int x = 45; x < 150; x += 15){
+				ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, RED);
+			}
+				}
+			}
+			}
+
+}
+
 /* USER CODE END 4 */
 
 /**
