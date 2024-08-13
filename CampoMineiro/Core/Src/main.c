@@ -55,7 +55,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
-
+short tabuleiro [7][5] = {{0,0,0,0,0,0,0},
+		                  {0,0,0,0,0,0,0},
+		                  {0,0,0,0,0,0,0},
+		                  {0,0,0,0,0,0,0},
+		                  {0,0,0,0,0,0,0}};
+int LugarX = 45, LugarY = 13;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -68,6 +73,7 @@ static void MX_SPI1_Init(void);
 void Menu(void);
 void Controls(void);
 void Jogo(void);
+void Movimento(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -284,6 +290,7 @@ void Jogo(void)
 {
 	ST7735_FillScreen(RED);
 	ST7735_FillRectangle(40, 10, 110, 60, BLACK);
+	// inicia tabuleiro
 	for (int y = 13; y < 65; y += 9)
 	{
 		for (int x = 45; x < 150; x += 15)
@@ -291,26 +298,52 @@ void Jogo(void)
 			ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, BLACK);
 		}
 	}
+	// randomiza local de bomba
+	for (int i = 0; i < 9; i++)
+		{
+			int x = rand () % 6;
+			int y = rand () % 4;
+			tabuleiro [x][y] = 1;
+		}
+	Movimento();
+}
+void Movimento(void)
+{
+	LugarX = 45, LugarY = 13;
+	ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, YELLOW);
+	while(1)
+	{
+	   if (BOTAO9 == 0 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 1 && LugarX>=55){
+		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
+		   ST7735_WriteString(LugarX -= 15, LugarY, "x", Font_7x10 , WHITE, YELLOW);
+		   HAL_Delay(750);
+	   }
+	   else if (BOTAO9 == 1 && BOTAO10 == 0 && BOTAO11 == 1 && BOTAO12 == 1 && LugarY<=56){
+		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
+		   ST7735_WriteString(LugarX, LugarY += 9, "x", Font_7x10 , WHITE, YELLOW);
+		   HAL_Delay(750);
+	   }
+	   else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 0 && BOTAO12 == 1 && LugarX<=134){
+		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
+		   ST7735_WriteString(LugarX += 15, LugarY, "x", Font_7x10 , WHITE, YELLOW);
+		   HAL_Delay(750);
+	   }
+	   else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 0 && LugarY>=22){
+		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
+		   ST7735_WriteString(LugarX, LugarY -= 9, "x", Font_7x10 , WHITE, YELLOW);
+		   HAL_Delay(750);
+	   }
+	}
+}
+void bandeira (void){
+	char pedro;
+	if (BOTAO9 == 0 && BOTAO11 == 0){
+		ST7735_WriteString(LugarX, LugarY, "p", Font_7x10 , WHITE, BLUE);
 
-			if (BOTAO9 == 0){
-	for (int y = 13; y < 65; y += 0)
-			{
-			for (int x = 45; x < 150; x -= 15){
-				ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, RED);
-			}
-				}
-			if(BOTAO10 == 0){
-				for (int y = 13; y < 65; y += 0)
-					{
-			for (int x = 45; x < 150; x += 15){
-				ST7735_WriteString(x, y, "x", Font_7x10 , WHITE, RED);
-			}
-				}
-			}
-			}
+	}
+
 
 }
-
 /* USER CODE END 4 */
 
 /**
