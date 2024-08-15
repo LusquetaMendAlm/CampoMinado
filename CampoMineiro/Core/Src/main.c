@@ -61,6 +61,7 @@ short tabuleiro [7][5] = {{0,0,0,0,0,0,0},
 		                  {0,0,0,0,0,0,0},
 		                  {0,0,0,0,0,0,0}};
 int LugarX = 45, LugarY = 13;
+int PosicaoX, PosicaoY;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -74,6 +75,8 @@ void Menu(void);
 void Controls(void);
 void Jogo(void);
 void Movimento(void);
+void Bandeira (void);
+void Selecionar (void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -301,47 +304,66 @@ void Jogo(void)
 	// randomiza local de bomba
 	for (int i = 0; i < 9; i++)
 		{
-			int x = rand () % 6;
-			int y = rand () % 4;
-			tabuleiro [x][y] = 1;
+			PosicaoX = rand () % 6;
+			PosicaoY = rand () % 4;
+			tabuleiro [PosicaoX][PosicaoY] = 1;
 		}
 	Movimento();
 }
 void Movimento(void)
 {
 	LugarX = 45, LugarY = 13;
+	PosicaoX = 0, PosicaoY = 0;
+
 	ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, YELLOW);
 	while(1)
 	{
 	   if (BOTAO9 == 0 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 1 && LugarX>=55){
 		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
 		   ST7735_WriteString(LugarX -= 15, LugarY, "x", Font_7x10 , WHITE, YELLOW);
+		   if(PosicaoX > 0) PosicaoX -= 1;
 		   HAL_Delay(750);
 	   }
 	   else if (BOTAO9 == 1 && BOTAO10 == 0 && BOTAO11 == 1 && BOTAO12 == 1 && LugarY<=56){
 		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
 		   ST7735_WriteString(LugarX, LugarY += 9, "x", Font_7x10 , WHITE, YELLOW);
+		   if(PosicaoY < 4) PosicaoX += 1;
 		   HAL_Delay(750);
 	   }
 	   else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 0 && BOTAO12 == 1 && LugarX<=134){
 		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
 		   ST7735_WriteString(LugarX += 15, LugarY, "x", Font_7x10 , WHITE, YELLOW);
+		   if(PosicaoX < 6) PosicaoX += 1;
 		   HAL_Delay(750);
 	   }
 	   else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 1 && BOTAO12 == 0 && LugarY>=22){
 		   ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLACK);
 		   ST7735_WriteString(LugarX, LugarY -= 9, "x", Font_7x10 , WHITE, YELLOW);
+		   if(PosicaoY > 0) PosicaoX -= 1;
 		   HAL_Delay(750);
 	   }
+	   Bandeira();
+	   Selecionar();
 	}
 }
-void bandeira (void){
-	char pedro;
-	if (BOTAO9 == 0 && BOTAO11 == 0){
-		ST7735_WriteString(LugarX, LugarY, "p", Font_7x10 , WHITE, BLUE);
-
+void Bandeira (void){
+	if (BOTAO9 == 0 && BOTAO10 == 0 && BOTAO11 == 1 && BOTAO12 == 1){
+		ST7735_WriteString(LugarX, LugarY, "x", Font_7x10 , WHITE, BLUE);
+		tabuleiro [PosicaoX][PosicaoY] = 2;
+		HAL_Delay(750);
 	}
-
+}
+void Selecionar (void) {
+	if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 0 && BOTAO12 == 0 && tabuleiro [PosicaoX][PosicaoY] == 0){
+		ST7735_FillRectangle(LugarX, LugarY, 7, 10, WHITE);
+		HAL_Delay(750);
+	}
+	else if (BOTAO9 == 1 && BOTAO10 == 1 && BOTAO11 == 0 && BOTAO12 == 0 && tabuleiro [PosicaoX][PosicaoY] == 1){
+			ST7735_FillRectangle(LugarX, LugarY, 7, 10, RED);
+			HAL_Delay(750);
+		}
+}
+void GameOver(void) {
 
 }
 /* USER CODE END 4 */
